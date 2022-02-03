@@ -12,16 +12,10 @@ function switchAlphabet($var){
     }
 }
 
-
-
-
-
 // Le joueur peut choisir, une lettre parmi les 26 qui composent l’alphabet (latin) et la renseigner
 //dans un “input” (ou assimilé).
 //Si le mot secret contient une ou plusieurs occurrences de la lettre renseignée par l’utilisateur,
 //celles-ci sont découvertes et affichées à leur position correspondante.
-
-
 
 
 // j'ouvre le fihier txt
@@ -49,6 +43,8 @@ for($i = 0 ; $i < $nombreDeLettre ; $i++){
 
 // debug($arrayMot);
 
+
+// si j'envoie le form
 if (isset($_POST["envoyer"])) {
 
     var_dump($_POST);
@@ -77,7 +73,7 @@ if (isset($_POST["envoyer"])) {
 
             <article>
                 <form action="" method="post" role="alphabet">
-
+    <fieldset>
                     <label for="A">a</label>
                     <input type="radio" value="a" id="A" name="a">
 
@@ -152,6 +148,8 @@ if (isset($_POST["envoyer"])) {
 
                     <label for="Z">z</label>
                     <input type="radio" value="z" id="Z" name="z">
+
+                    </fieldset>
 
                     <input type="submit" name="envoyer">
 
