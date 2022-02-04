@@ -49,7 +49,7 @@ if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
     // gérer plusieurs position pour une seule lettre
     // prendre tout les char dans l'history
     // une nouvelle variable de session qui permet d'afficher à l'utilisateur les underscore et les chars
-    
+
     $positionChar = strpos($_SESSION["mot"], $char);
 
     if (!$positionChar) {
@@ -110,7 +110,9 @@ if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
                 }
                 ?>
                 <form action="" method="post" role="alphabet">
+
                     <fieldset>
+                        
                         <label for="A">a</label>
                         <input type="radio" value="a" id="A" name="a">
 
