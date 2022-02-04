@@ -32,82 +32,57 @@ debug($_SESSION["mot"]);
 
 $nombreDeLettre = strlen($_SESSION["mot"]);
 // echo $nombreDeLettre;
+$i = 0;
+$mot_affiche = "";
+$tiret = "_";
+
+
+for ($i = 0; $i < $nombreDeLettre; $i++)
+    $mot_affiche .= $tiret;
+echo $mot_affiche;
+
 
 if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
 
     $char = $_POST["a"];
 
-
-    $charResult = match ($char) {
-        'a' => 'a',
-        'b' => 'b',
-        'c' => 'c',
-        'd' => 'd',
-        'e' => 'e',
-        'f' => 'f',
-        'g' => 'g',
-        'h' => 'h',
-        'i' => 'i',
-        'j' => 'j',
-        'k' => 'k',
-        'l' => 'l',
-        'm' => 'm',
-        'n' => 'n',
-        'o' => 'o',
-        'p' => 'p',
-        'q' => 'q',
-        'r' => 'r',
-        's' => 's',
-        't' => 't',
-        'u' => 'u',
-        'v' => 'v',
-        'w' => 'w',
-        'x' => 'x',
-        'y' => 'y',
-        'z' => 'z',
-    };
-
-    $positionChar = strpos($_SESSION["mot"], $charResult);
+    // gérer plusieurs position pour une seule lettre
+    // prendre tout les char dans l'history
+    // une nouvelle variable de session qui permet d'afficher à l'utilisateur les underscore et les chars
     
+    $positionChar = strpos($_SESSION["mot"], $char);
 
-    if ($positionChar === false) {
-
-
+    if (!$positionChar) {
         $msg = " Désolé , '$char' n'est pas dans le mot";
-    } else if ($positionChar !== false) {
+    } else {
 
-        if (!isset($_SESSION["char"]) && empty($_SESSION["char"])) {
+        if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
 
-            $_SESSION["char"]  = $charResult;
+            $_SESSION["history"]  = $char;
         } else {
 
-            $_SESSION["char"] = $_SESSION["char"] . $charResult;
-            
+            $_SESSION["history"] .= $char;
         }
     }
-}
-
-for ($i = 0; $i < $nombreDeLettre; $i++) {
 
 
-    $tiret = "_";
-    echo $tiret;
-}
-if(isset($_SESSION["char"])){
-print_r($_SESSION["char"]); // il faut réussir a remplacer au bon endroit le char a la place du tiret
-// debug($arrayMot);
-
-
-}
-
-
-
-// si j'envoie le form
-if (isset($_POST["envoyer"])) {
-
+    $mot_affiche = str_replace($tiret,  $_SESSION["history"], $positionChar, $nombreDeLettre);
+    if (isset($_SESSION["char"])) {
+        print_r($_SESSION["char"]);
+        // print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du tiret
+        // debug($positionChar);
+        // debug($replacement);
+        if ($positionChar == $replacement) {
+        }
+    }
 
     debug($char);
 }
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
