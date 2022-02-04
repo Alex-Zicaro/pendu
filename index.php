@@ -9,11 +9,9 @@ function debug($var)
 // nouvelle partie
 if (isset($_POST["reset"])) {
     session_destroy();
+    header("location: index.php");
 }
-// Le joueur peut choisir, une lettre parmi les 26 qui composent l’alphabet (latin) et la renseigner
-//dans un “input” (ou assimilé).
-//Si le mot secret contient une ou plusieurs occurrences de la lettre renseignée par l’utilisateur,
-//celles-ci sont découvertes et affichées à leur position correspondante.
+
 
 if (!isset($_SESSION["mot"])) {
     // j'ouvre le fihier txt
@@ -27,7 +25,7 @@ if (!isset($_SESSION["mot"])) {
 
     $_SESSION["mot"] = trim($arrayMot[$numrand]);
 }
-var_dump($_SESSION["mot"]);
+debug($_SESSION["mot"]);
 
 
 // debug($motChoisis);
@@ -35,81 +33,80 @@ var_dump($_SESSION["mot"]);
 $nombreDeLettre = strlen($_SESSION["mot"]);
 // echo $nombreDeLettre;
 
-for ($i = 0; $i < $nombreDeLettre; $i++) {
-    // a page affiche alors autant d’éléments (espaces vides, tirets, étoiles, images…) qu’il y a de
-    //lettres dans le mot secret choisi.
+if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
+
+    $char = $_POST["a"];
+
+
+    $charResult = match ($char) {
+        'a' => 'a',
+        'b' => 'b',
+        'c' => 'c',
+        'd' => 'd',
+        'e' => 'e',
+        'f' => 'f',
+        'g' => 'g',
+        'h' => 'h',
+        'i' => 'i',
+        'j' => 'j',
+        'k' => 'k',
+        'l' => 'l',
+        'm' => 'm',
+        'n' => 'n',
+        'o' => 'o',
+        'p' => 'p',
+        'q' => 'q',
+        'r' => 'r',
+        's' => 's',
+        't' => 't',
+        'u' => 'u',
+        'v' => 'v',
+        'w' => 'w',
+        'x' => 'x',
+        'y' => 'y',
+        'z' => 'z',
+    };
+
+    $positionChar = strpos($_SESSION["mot"], $charResult);
     
 
-    if (isset($_POST["envoyer"])) {
-        if (isset($_POST["a"])) {
-            $char = $_POST["a"];
+    if ($positionChar === false) {
+
+
+        $msg = " Désolé , '$char' n'est pas dans le mot";
+    } else if ($positionChar !== false) {
+
+        if (!isset($_SESSION["char"]) && empty($_SESSION["char"])) {
+
+            $_SESSION["char"]  = $charResult;
+        } else {
+
+            $_SESSION["char"] = $_SESSION["char"] . $charResult;
+            
         }
-
-        $charResult = match ($char) {
-            'a' => 'a',
-            'b' => 'b',
-            'c' => 'c',
-            'd' => 'd',
-            'e' => 'e',
-            'f' => 'f',
-            'g' => 'g',
-            'h' => 'h',
-            'i' => 'i',
-            'j' => 'j',
-            'k' => 'k',
-            'l' => 'l',
-            'm' => 'm',
-            'n' => 'n',
-            'o' => 'o',
-            'p' => 'p',
-            'q' => 'q',
-            'r' => 'r',
-            's' => 's',
-            't' => 't',
-            'u' => 'u',
-            'v' => 'v',
-            'w' => 'w',
-            'x' => 'x',
-            'y' => 'y',
-            'z' => 'z',
-        };
-
-        $positionChar = strpos($_SESSION["mot"], $charResult);
-
-        if ($positionChar === false) {
-
-
-            $msg = " Désolé , '$char' n'est pas dans le mot";
-        } else if ($positionChar !== false) {
-
-            $msg = "oui";
-        }} 
-
-            echo "_";
-        
-    
+    }
 }
 
+for ($i = 0; $i < $nombreDeLettre; $i++) {
+
+
+    $tiret = "_";
+    echo $tiret;
+}
+if(isset($_SESSION["char"])){
+print_r($_SESSION["char"]); // il faut réussir a remplacer au bon endroit le char a la place du tiret
 // debug($arrayMot);
+
+
+}
+
 
 
 // si j'envoie le form
 if (isset($_POST["envoyer"])) {
 
 
-
-
-
-
-
-
-
-
-
-
-
-    var_dump($_POST);
-    var_dump($char);
+    debug($char);
 }
 ?>
 
