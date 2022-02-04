@@ -72,8 +72,7 @@ if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
         // print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du tiret
         // debug($positionChar);
         // debug($replacement);
-        if ($positionChar == $replacement) {
-        }
+
     }
 
     debug($char);
@@ -112,7 +111,7 @@ if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
                 <form action="" method="post" role="alphabet">
 
                     <fieldset>
-                        
+
                         <label for="A">a</label>
                         <input type="radio" value="a" id="A" name="a">
 
