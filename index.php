@@ -6,6 +6,17 @@ function debug($var)
     var_dump($var);
     echo "</pre>";
 }
+
+function trimTab($tab)
+{
+    $t = [];
+    foreach ($tab as $item)
+    {
+        array_push($t,trim($item));
+    }
+    return $t;
+}
+
 // nouvelle partie
 if (isset($_POST["reset"])) {
     session_destroy();
@@ -27,58 +38,82 @@ if (!isset($_SESSION["mot"])) {
 }
 debug($_SESSION["mot"]);
 
+$_SESSION["motAffiche"] = " ";
+$_SESSION["tiret"] = "_";
 
+$nombreDeLettre = strlen($_SESSION["mot"]) ;
 // debug($motChoisis);
+for ($i = 0; $i < $nombreDeLettre; $i++) {
+    $_SESSION["motAffiche"] .= $_SESSION["tiret"];
 
-$nombreDeLettre = strlen($_SESSION["mot"]);
+    
+    
+}
+
 // echo $nombreDeLettre;
 $i = 0;
-$mot_affiche = "";
-$tiret = "_";
 
-
-for ($i = 0; $i < $nombreDeLettre; $i++)
-    $mot_affiche .= $tiret;
-echo $mot_affiche;
+// for($i = 1 ; $i <= 6 ; $i++)
+// {
+//     $_SESSION['lettresJouees'][] = 0;
+// }
 
 
 if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
 
     $char = $_POST["a"];
 
+    if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
+
+        $_SESSION["history"]  = $char;
+    } else {
+
+        $_SESSION["history"] .= $char;
+    }
+var_dump($_SESSION["history"]);
+    
+    $positionChar = strpos($_SESSION["mot"], $char);
+
+// debug($positionChar);
+
+    if (!empty($positionChar) ){
+        //Mettre cette lettre dans le mot a afficher
+        str_replace($_SESSION["tiret"], $_SESSION["motAffiche"] , $char );
+        
+        $msg = " Bravo , '$char' est dans le mot";
+        // $_SESSION['motAffiche'][$i] = chr( 65 + $positionChar);
+
+        //Incrementer le nombre de lettres trouvees en général à 1
+        
+        //Incrémenter le nombre de la lettre actuelle trouve dans le mot a 1
+        
+    } else if($positionChar === false){
+
+        $msg = " Désolé , '$char' n'est pas dans le mot";
+
+    }
+
     // gérer plusieurs position pour une seule lettre
     // prendre tout les char dans l'history
     // une nouvelle variable de session qui permet d'afficher à l'utilisateur les underscore et les chars
 
-    $positionChar = strpos($_SESSION["mot"], $char);
 
-    if (!$positionChar) {
-        $msg = " Désolé , '$char' n'est pas dans le mot";
-    } else {
+}
 
-        if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
+    // print_r($_SESSION["tiret"]);
+    // var_dump($_SESSION["history"]);
 
-            $_SESSION["history"]  = $char;
-        } else {
+    
 
-            $_SESSION["history"] .= $char;
-        }
-    }
-
-
-    $mot_affiche = str_replace($tiret,  $_SESSION["history"], $positionChar, $nombreDeLettre);
-    if (isset($_SESSION["char"])) {
-        print_r($_SESSION["char"]);
-        // print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du tiret
+    // if (isset($_SESSION["history"])) {
+    //     print_r($_SESSION["motAffiche"]);
+        // print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du _SESSION["tiret"]
         // debug($positionChar);
         // debug($replacement);
 
-    }
+    // }
 
-    debug($char);
-}
-
-
+    debug($_SESSION['motAffiche']);
 
 
 
