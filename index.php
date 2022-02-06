@@ -23,15 +23,15 @@ if (isset($_POST["reset"])) {
     header("location: index.php");
 }
 
-$image = match ($_SESSION['error']) {
+// $image = match ($_SESSION['error']) {
 
-    1 => null, //image 1
-    2 => null, //image 2
-    3 => null, //image 3
-    4 => null, //image 4
-    5 => null, //image 5
-    6 => null,
-};
+//     1 => null, //image 1
+//     2 => null, //image 2
+//     3 => null, //image 3
+//     4 => null, //image 4
+//     5 => null, //image 5
+//     6 => null,
+// };
 
 
 if (!isset($_SESSION["mot"])) {
@@ -73,16 +73,19 @@ for ($i = 0; $i < $nombreDeLettre; $i++)
 // }
 
 
-if (isset($_GET["a"])) {
+if (isset($_GET["a"]) ) {
     $char = "";
     $char = $_GET["a"];
+    
+
     $positionChar = strpos($_SESSION["mot"], $char);
 
 
-    if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
+    if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) 
 
         $_SESSION["history"]  = $char;
-    } else {
+
+    else {
 
         $_SESSION["history"] .= $char;
     }
@@ -90,46 +93,39 @@ if (isset($_GET["a"])) {
 
     $found = false; //variable pour compter lettre erronée 
     for ($i = 0; $i < strlen($_SESSION['mot']); $i++) {
+        
         if ($_SESSION['mot'][$i] == $char) {
+            
             $_SESSION['motAffiche'][$i] = $char;
+            
+            $_SESSION["bonChar"] = $_SESSION['motAffiche'];
 
+            // $_SESSION["motAffiche"] = str_replace($_SESSION["mot"],$_SESSION["bonChar"],$_SESSION["motAffiche"]);
+            
+            $msg = " Bravo , '$char' est dans le mot";
             $found = true;
+            
         }
     }
 
     if (!$found) {
         $_SESSION['error']++;
+        $msg = " Désolé , '$char' n'est pas dans le mot";
     }
 
-
+    
     // debug($positionChar);
 
-    if (isset($positionChar)) {
         //Mettre cette lettre dans le mot a afficher
-
-        $_SESSION["bonChar"] .= $char;
         // debug($_SESSION["bonChar"]);
-
-
-
-
-        $msg = " Bravo , '$char' est dans le mot";
-
-        // $_SESSION['motAffiche'][$i] = chr( 65 + $positionChar);
         //Incrementer le nombre de lettres trouvees en général à 1
 
         //Incrémenter le nombre de la lettre actuelle trouve dans le mot a 1
 
-    } else if ($positionChar === false) {
-
-        $msg = " Désolé , '$char' n'est pas dans le mot";
-    }
 
     // gérer plusieurs position pour une seule lettre
     // prendre tout les char dans l'history
     // une nouvelle variable de session qui permet d'afficher à l'utilisateur les underscore et les chars
-
-
 }
 
 // print_r($_SESSION["tiret"]);
@@ -144,8 +140,7 @@ if (isset($_GET["a"])) {
 // debug($replacement);
 
 // }
-
-echo ($_SESSION['motAffiche']);
+echo $_SESSION['motAffiche'];
 
 
 ?>
