@@ -8,17 +8,9 @@ require_once('include/fonction.php');
 if (isset($_POST["reset"])) {
     session_destroy();
     header("location: index.php");
+
 }
 
-// $image = match ($_SESSION['error']) {
-
-//     1 => null, //image 1
-//     2 => null, //image 2
-//     3 => null, //image 3
-//     4 => null, //image 4
-//     5 => null, //image 5
-//     6 => null,
-// };
 
 
 if (!isset($_SESSION["mot"])) {
@@ -33,6 +25,11 @@ if (!isset($_SESSION["mot"])) {
     $numrand = rand(0, $nombreDeMot);
 
     $_SESSION["mot"] = $arrayMot[$numrand];
+
+    
+
+
+
 }
 
 debug($_SESSION["mot"]);
@@ -44,11 +41,13 @@ $_SESSION["tiret"] = "_";
 $_SESSION["bonChar"] = "";
 $i = 0;
 
+
+
+
+
 $nombreDeLettre = strlen($_SESSION["mot"]);
-
 for ($i = 0; $i < $nombreDeLettre; $i++)
-    $_SESSION["motAffiche"][$i] = $_SESSION["tiret"];
-
+$_SESSION["motAffiche"][$i] = $_SESSION["tiret"];
 
 
 // echo $nombreDeLettre;
@@ -60,74 +59,61 @@ for ($i = 0; $i < $nombreDeLettre; $i++)
 // }
 
 
-if (isset($_GET["a"]) ) {
+if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet,$_GET["a"]) !== false && $_SESSION["error"] <= 9) {
     $char = "";
     $char = $_GET["a"];
     
 
-    $positionChar = strpos($_SESSION["mot"], $char);
+    
 
 
-    if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) 
+    if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
 
         $_SESSION["history"]  = $char;
 
-    else {
+    }else {
 
         $_SESSION["history"] .= $char;
     }
+    
     debug($_SESSION["history"]);
 
     $found = false; //variable pour compter lettre erronée 
-    for ($i = 0; $i < strlen($_SESSION['mot']); $i++) {
-        
-        if ($_SESSION['mot'][$i] == $char) {
-            
-            $_SESSION['motAffiche'][$i] = $char;
-            
-            $_SESSION["bonChar"] = $_SESSION['motAffiche'];
+    
+    for($j = 0; $j < strlen($_SESSION["history"]) ; $j++){
 
-            // $_SESSION["motAffiche"] = str_replace($_SESSION["mot"],$_SESSION["bonChar"],$_SESSION["motAffiche"]);
+
+    for ($i = 0; $i < strlen($_SESSION['mot']); $i++) {
+
+        if($_SESSION["mot"][$i] == $char ){
+
+        $found = true;
+        $msg = "Bravo , '$char' est dans le mot";
+    }
+        if ($_SESSION['mot'][$i] == $_SESSION["history"][$j]) {
             
-            $msg = " Bravo , '$char' est dans le mot";
-            $found = true;
+            $_SESSION['motAffiche'][$i] = $_SESSION["history"][$j];
             
         }
     }
-
-    if (!$found) {
-        $_SESSION['error']++;
-        $msg = " Désolé , '$char' n'est pas dans le mot";
-    }
-
-    
-    // debug($positionChar);
-
-        //Mettre cette lettre dans le mot a afficher
-        // debug($_SESSION["bonChar"]);
-        //Incrementer le nombre de lettres trouvees en général à 1
-
-        //Incrémenter le nombre de la lettre actuelle trouve dans le mot a 1
-
-
-    // gérer plusieurs position pour une seule lettre
-    // prendre tout les char dans l'history
-    // une nouvelle variable de session qui permet d'afficher à l'utilisateur les underscore et les chars
 }
 
-// print_r($_SESSION["tiret"]);
-// var_dump($_SESSION["history"]);
+
+    if (!$found) {
+
+        var_dump($found);
+        $_SESSION['error'] ++;
+
+        $msg = "Désolé , '$char' n'est pas dans le mot";
+    }
+}
 
 
+// $positionChar = strpos($_SESSION["mot"], $char);
 
-// if (isset($_SESSION["history"])) {
-//     print_r($_SESSION["motAffiche"]);
-// print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du _SESSION["tiret"]
-// debug($positionChar);
-// debug($replacement);
+var_dump($_SESSION["error"]);
 
-// }
-echo $_SESSION['motAffiche'];
+echo $_SESSION["motAffiche"];
 
 
 ?>
@@ -154,9 +140,12 @@ echo $_SESSION['motAffiche'];
             <article>
                 <?php if (isset($msg)) {
                     echo $msg;
+                } else if($_SESSION["motAffiche"] == $_SESSION["mot"]){
+                    echo "Vous avez découvert le mot bravo , Voulez-vous rejouer ?";
                 }
                 ?>
 
+<img src="media/75px-Hangman-<?= $_SESSION['error'] ?>.png" alt="hangman">
 
                 <div class="alphabet">
                     <?php

@@ -3,6 +3,8 @@
 
 require_once('include/fonction.php');
 
+if (!isset($arrayMot))
+$arrayMot = trimTab(file("mots.txt"));
 
 
 
@@ -14,10 +16,9 @@ if (isset($_POST["newMot"])) {
 
     $newMot = deleteSpecialChar(strtolower($Nouveaumot));
 
-    if (!isset($arrayMot))
-        $arrayMot = trimTab(file("mots.txt"));
 
-    foreach ($arrayMot as $mot){
+
+    foreach ($arrayMot as $key => $mot){
         if($newMot === $mot){
             $msg = "Le mot n'est pas disponible";
         }
@@ -31,6 +32,7 @@ if (isset($_POST["newMot"])) {
         }
     
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -56,13 +58,21 @@ if (isset($_POST["newMot"])) {
                     if(isset($msg)){
                         echo $msg;
                     }
+                    foreach($arrayMot as $mot){
+
+                        ?>
+                        <p><?= $mot ?> </p>
+
+                        <?php
+                    }
                     ?>
                 </h2>
                 <form action="" method="POST">
-                    <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux interdit</i>)</label>
+                    <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux et les nombres sont interdit</i>)</label>
                     <input type="text" id="newMot" name="newMot">
                     <input type="submit" name="enoyer" value="envoyer">
                 </form>
+                <a href="index.php">Retourner jouer !</a>
             </article>
         </section>
     </main>
