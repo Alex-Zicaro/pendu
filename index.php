@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 function debug($var)
 {
     echo "<pre>";
@@ -10,9 +11,8 @@ function debug($var)
 function trimTab($tab)
 {
     $t = [];
-    foreach ($tab as $item)
-    {
-        array_push($t,trim($item));
+    foreach ($tab as $item) {
+        array_push($t, trim($item));
     }
     return $t;
 }
@@ -26,7 +26,8 @@ if (isset($_POST["reset"])) {
 
 if (!isset($_SESSION["mot"])) {
     // j'ouvre le fihier txt
-    $arrayMot = file("mots.txt");
+    $arrayMot = trimTab(file("mots.txt"));
+    // debug($arrayMot);
     // je compte le nombre de mot dans mon fichier (array) pour définir le nombre de mot que j'ai
     // -1 car il commence a 1 et on veut commencer a 0 
     $nombreDeMot =  count($arrayMot,) - 1;
@@ -34,24 +35,27 @@ if (!isset($_SESSION["mot"])) {
     // on rend aléatoire le mot avec la function rand 
     $numrand = rand(0, $nombreDeMot);
 
-    $_SESSION["mot"] = trim($arrayMot[$numrand]);
+    $_SESSION["mot"] = $arrayMot[$numrand];
 }
+
 debug($_SESSION["mot"]);
-
-$_SESSION["motAffiche"] = " ";
+$alphabet = "abcdefghijklmnopqrstuvwxyz";
+$_SESSION["error"] = 0;
+$_SESSION['motActuelle'] = "";
+$_SESSION["motAffiche"] = "";
 $_SESSION["tiret"] = "_";
+$_SESSION["bonChar"] = "";
+$i = 0;
 
-$nombreDeLettre = strlen($_SESSION["mot"]) ;
-// debug($motChoisis);
-for ($i = 0; $i < $nombreDeLettre; $i++) {
-    $_SESSION["motAffiche"] .= $_SESSION["tiret"];
+$nombreDeLettre = strlen($_SESSION["mot"]);
 
-    
-    
-}
+for ($i = 0; $i < $nombreDeLettre; $i++)
+    $_SESSION["motAffiche"][$i] = $_SESSION["tiret"];
+
+
 
 // echo $nombreDeLettre;
-$i = 0;
+
 
 // for($i = 1 ; $i <= 6 ; $i++)
 // {
@@ -59,9 +63,11 @@ $i = 0;
 // }
 
 
-if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
+if (isset($_GET["a"])) {
+    $char = "";
+    $char = $_GET["a"];
+    $positionChar = strpos($_SESSION["mot"], $char);
 
-    $char = $_POST["a"];
 
     if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
 
@@ -70,27 +76,43 @@ if (isset($_POST["envoyer"]) && isset($_POST["a"])) {
 
         $_SESSION["history"] .= $char;
     }
-var_dump($_SESSION["history"]);
-    
-    $positionChar = strpos($_SESSION["mot"], $char);
+    debug($_SESSION["history"]);
 
-// debug($positionChar);
+    $found = false; //variable pour compter lettre erronée 
+    for ($i = 0; $i < strlen($_SESSION['mot']); $i++) {
+        if ($_SESSION['mot'][$i] == $char) {
+            $_SESSION['motAffiche'][$i] = $char;
 
-    if (!empty($positionChar) ){
+            $found = true;
+        }
+    }
+
+    if (!$found) {
+        $_SESSION['error']++;
+    }
+
+
+    // debug($positionChar);
+
+    if (isset($positionChar)) {
         //Mettre cette lettre dans le mot a afficher
-        str_replace($_SESSION["tiret"], $_SESSION["motAffiche"] , $char );
-        
-        $msg = " Bravo , '$char' est dans le mot";
-        // $_SESSION['motAffiche'][$i] = chr( 65 + $positionChar);
 
+        $_SESSION["bonChar"] .= $char;
+        // debug($_SESSION["bonChar"]);
+
+
+
+
+        $msg = " Bravo , '$char' est dans le mot";
+
+        // $_SESSION['motAffiche'][$i] = chr( 65 + $positionChar);
         //Incrementer le nombre de lettres trouvees en général à 1
-        
+
         //Incrémenter le nombre de la lettre actuelle trouve dans le mot a 1
-        
-    } else if($positionChar === false){
+
+    } else if ($positionChar === false) {
 
         $msg = " Désolé , '$char' n'est pas dans le mot";
-
     }
 
     // gérer plusieurs position pour une seule lettre
@@ -100,21 +122,20 @@ var_dump($_SESSION["history"]);
 
 }
 
-    // print_r($_SESSION["tiret"]);
-    // var_dump($_SESSION["history"]);
+// print_r($_SESSION["tiret"]);
+// var_dump($_SESSION["history"]);
 
-    
 
-    // if (isset($_SESSION["history"])) {
-    //     print_r($_SESSION["motAffiche"]);
-        // print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du _SESSION["tiret"]
-        // debug($positionChar);
-        // debug($replacement);
 
-    // }
+// if (isset($_SESSION["history"])) {
+//     print_r($_SESSION["motAffiche"]);
+// print_r($replacement); // il faut réussir a remplacer au bon endroit le char a la place du _SESSION["tiret"]
+// debug($positionChar);
+// debug($replacement);
 
-    debug($_SESSION['motAffiche']);
+// }
 
+echo ($_SESSION['motAffiche']);
 
 
 ?>
@@ -143,95 +164,26 @@ var_dump($_SESSION["history"]);
                     echo $msg;
                 }
                 ?>
-                <form action="" method="post" role="alphabet">
 
-                    <fieldset>
 
-                        <label for="A">a</label>
-                        <input type="radio" value="a" id="A" name="a">
+                <div class="alphabet">
+                    <?php
+                    //Affichage du mot + alphabet
+                    if ($_SESSION['error'] < 10 && $_SESSION['mot'] !== $_SESSION['motAffiche']) {
+                        for ($i = 0; $i < strlen($alphabet); $i++) {
+                            if (isset($_SESSION['history']) && strpos($_SESSION['history'], $alphabet[$i]) === false) {
+                                echo " <a href='index.php?a=$alphabet[$i]'>$alphabet[$i]</a> ";
+                            } else if (!isset($_SESSION["history"])) {
+                                echo " <a href='index.php?a=$alphabet[$i]'>$alphabet[$i]</a> ";
+                            }
+                        }
+                    }
+                    ?>
+                </div>
 
-                        <label for="B">b</label>
-                        <input type="radio" value="b" id="B" name="a">
-
-                        <label for="C">c</label>
-                        <input type="radio" value="c" id="C" name="a">
-
-                        <label for="D">d</label>
-                        <input type="radio" value="d" id="D" name="a">
-
-                        <label for="E">e</label>
-                        <input type="radio" value="e" id="E" name="a">
-
-                        <label for="F">f</label>
-                        <input type="radio" value="f" id="F" name="a">
-
-                        <label for="G">g</label>
-                        <input type="radio" value="g" id="G" name="a">
-
-                        <label for="H">h</label>
-                        <input type="radio" value="h" id="H" name="a">
-
-                        <label for="I">i</label>
-                        <input type="radio" value="i" id="I" name="a">
-
-                        <label for="J">j</label>
-                        <input type="radio" value="j" id="J" name="a">
-
-                        <label for="K">k</label>
-                        <input type="radio" value="k" id="K" name="a">
-
-                        <label for="L">l</label>
-                        <input type="radio" value="l" id="L" name="a">
-
-                        <label for="M">m</label>
-                        <input type="radio" value="m" id="M" name="a">
-
-                        <label for="N">n</label>
-                        <input type="radio" value="n" id="N" name="a">
-
-                        <label for="O">o</label>
-                        <input type="radio" value="o" id="O" name="a">
-
-                        <label for="P">p</label>
-                        <input type="radio" value="p" id="P" name="a">
-
-                        <label for="Q">q</label>
-                        <input type="radio" value="q" id="Q" name="a">
-
-                        <label for="R">r</label>
-                        <input type="radio" value="r" id="R" name="a">
-
-                        <label for="S">s</label>
-                        <input type="radio" value="s" id="S" name="a">
-
-                        <label for="T">t</label>
-                        <input type="radio" value="t" id="T" name="a">
-
-                        <label for="U">u</label>
-                        <input type="radio" value="u" id="U" name="a">
-
-                        <label for="V">v</label>
-                        <input type="radio" value="v" id="V" name="a">
-
-                        <label for="W">w</label>
-                        <input type="radio" value="w" id="W" name="a">
-
-                        <label for="X">x</label>
-                        <input type="radio" value="x" id="X" name="a">
-
-                        <label for="Y">y</label>
-                        <input type="radio" value="y" id="Y" name="a">
-
-                        <label for="Z">z</label>
-                        <input type="radio" value="z" id="Z" name="a">
-
-                    </fieldset>
-
-                    <input type="submit" name="envoyer" value="envoyer">
+                <form action="" method="POST">
 
                     <input type="submit" name="reset" value="Nouvelle partie">
-
-
                 </form>
             </article>
         </section>
