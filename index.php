@@ -1,21 +1,8 @@
 <?php
 session_start();
 
-function debug($var)
-{
-    echo "<pre>";
-    var_dump($var);
-    echo "</pre>";
-}
+require_once('include/fonction.php');
 
-function trimTab($tab)
-{
-    $t = [];
-    foreach ($tab as $item) {
-        array_push($t, trim($item));
-    }
-    return $t;
-}
 
 // nouvelle partie
 if (isset($_POST["reset"])) {
@@ -190,6 +177,7 @@ echo $_SESSION['motAffiche'];
 
                     <input type="submit" name="reset" value="Nouvelle partie">
                 </form>
+                <a href="admin.php">Ajouter un mot</a>
             </article>
         </section>
     </main>

@@ -1,19 +1,74 @@
-index = Lorsqu’une partie commence, un mot est choisi aléatoirement dans le fichier mots.txt.
-La page affiche alors autant d’éléments (espaces vides, tirets, étoiles, images…) qu’il y a de
-lettres dans le mot secret choisi.
-Le joueur peut choisir, une lettre parmi les 26 qui composent l’alphabet (latin) et la renseigner
-dans un “input” (ou assimilé).
-Si le mot secret contient une ou plusieurs occurrences de la lettre renseignée par l’utilisateur,
-celles-ci sont découvertes et affichées à leur position correspondante.
-Si le mot secret ne contient aucune occurrence de la lettre choisie par le joueur, le dessin du
-pendu s’enrichit d’un membre.
-Un historique comporte l’ensemble des propositions faites.
-La partie se termine quand toutes les lettres ont été trouvées (Victoire) ou quand le bonhomme
-est pendu (Défaite). Un message spécifique apparaît alors et incite l’utilisateur à faire une
-nouvelle partie
+
+<?php
+
+require_once('include/fonction.php');
 
 
-admin = Gestion des mots :
-Une page d’administration permet d’ajouter et de supprimer des mots. Les mots ne peuvent
-contenir que des lettres. Il doit toujours y avoir au moins un mot dans la liste. Un mot ne peut
-être présent qu’une fois dans la liste
+
+
+if (isset($_POST["newMot"])) {
+
+    $msg = false;
+
+    $Nouveaumot = $_POST["newMot"];
+
+    $newMot = deleteSpecialChar(strtolower($Nouveaumot));
+
+    if (!isset($arrayMot))
+        $arrayMot = trimTab(file("mots.txt"));
+
+    foreach ($arrayMot as $mot){
+        if($newMot === $mot){
+            $msg = "Le mot n'est pas disponible";
+        }
+    }
+        if(!$msg){
+            
+            $fichierMot = fopen('mots.txt', 'a+');
+            fputs($fichierMot, $newMot . "\n");
+            $msg = "J'ai taper votre mot à la main pour le rentrer dans le jeu";
+            
+        }
+    
+}
+
+?>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+
+    </header>
+    <main>
+
+        <section>
+            <article>
+                <h2>
+                    <?php 
+                    if(isset($msg)){
+                        echo $msg;
+                    }
+                    ?>
+                </h2>
+                <form action="" method="POST">
+                    <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux interdit</i>)</label>
+                    <input type="text" id="newMot" name="newMot">
+                    <input type="submit" name="enoyer" value="envoyer">
+                </form>
+            </article>
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
+</html>

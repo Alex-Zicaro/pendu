@@ -1,8 +1,9 @@
-charlie
-delta
-tango
-soraka
-draven
-chocolat
+premier
+non
 oui
-bonjour
+test
+et
+test
+jouer
+damso
+mordre
