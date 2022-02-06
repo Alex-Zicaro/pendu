@@ -23,6 +23,16 @@ if (isset($_POST["reset"])) {
     header("location: index.php");
 }
 
+$image = match ($_SESSION['error']) {
+
+    1 => null, //image 1
+    2 => null, //image 2
+    3 => null, //image 3
+    4 => null, //image 4
+    5 => null, //image 5
+    6 => null,
+};
+
 
 if (!isset($_SESSION["mot"])) {
     // j'ouvre le fihier txt
