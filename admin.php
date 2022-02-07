@@ -43,6 +43,8 @@ if (isset($_POST["newMot"])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/pendu.css">
 </head>
 
 <body>
@@ -53,7 +55,18 @@ if (isset($_POST["newMot"])) {
 
         <section>
             <article>
-                <h2>
+
+            <form action="" method="POST">
+                    <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux et les nombres sont interdit</i>)</label>
+                    <input type="text" id="newMot" name="newMot">
+                    <input type="submit" name="enoyer" value="envoyer">
+                </form>
+
+                <a href="index.php">Retourner jouer !</a>
+
+                <h2>Listes des mots</h2>
+                <ul>
+                    
                     <?php 
                     if(isset($msg)){
                         echo $msg;
@@ -61,18 +74,15 @@ if (isset($_POST["newMot"])) {
                     foreach($arrayMot as $mot){
 
                         ?>
-                        <p><?= $mot ?> </p>
-
+                        
+                        <li><?= $mot ?></li>
+                        
                         <?php
                     }
                     ?>
-                </h2>
-                <form action="" method="POST">
-                    <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux et les nombres sont interdit</i>)</label>
-                    <input type="text" id="newMot" name="newMot">
-                    <input type="submit" name="enoyer" value="envoyer">
-                </form>
-                <a href="index.php">Retourner jouer !</a>
+
+                <ul>
+
             </article>
         </section>
     </main>

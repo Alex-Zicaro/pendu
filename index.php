@@ -10,8 +10,6 @@ if (isset($_POST["reset"])) {
     header("location: index.php");
 }
 
-
-
 if (!isset($_SESSION["mot"])) {
     // j'ouvre le fihier txt
     $arrayMot = trimTab(file("mots.txt"));
@@ -28,14 +26,12 @@ if (!isset($_SESSION["mot"])) {
 
 debug($_SESSION["mot"]);
 $alphabet = "abcdefghijklmnopqrstuvwxyz";
-$_SESSION["error"] = 0;
+$_SESSION["error"] = 1;
 $_SESSION['motActuelle'] = "";
 $_SESSION["motAffiche"] = "";
 $_SESSION["tiret"] = "_";
 $_SESSION["bonChar"] = "";
 $i = 0;
-
-
 
 
 
@@ -76,22 +72,30 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
 
         for ($i = 0; $i < strlen($_SESSION['mot']); $i++) {
 
-            if ($_SESSION["mot"][$i] == $char) {
 
-                $found = true;
-                $msg = "Bravo , '$char' est dans le mot";
-            } else {
-                $found = false;
-            }
-            if ($_SESSION['mot'][$i] == $_SESSION["history"][$j]) {
+            if ($_SESSION['mot'][$i] == $_SESSION["history"][$j] && $_SESSION["mot"] !== $_SESSION["motAffiche"]) {
 
                 $_SESSION['motAffiche'][$i] = $_SESSION["history"][$j];
+
+                if ($_SESSION["mot"][$i] == $char) {
+
+                    $found = true;
+
+                    if ($_SESSION["motAffiche"] != $_SESSION["mot"])
+                        $msg = "Bravo , '$char' est dans le mot";
+
+                    else {
+                        $msg = "Tu as gagné bravo";
+                    }
+                }
             }
         }
     }
 
 
     if (!$found && isset($_SESSION["error"])) {
+
+        var_dump(null);
 
         $_SESSION['error']++;
 
@@ -114,7 +118,9 @@ echo $_SESSION["motAffiche"];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><?= $_SESSION["mot"] ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/pendu.css">
 </head>
 
 <body>
@@ -129,8 +135,6 @@ echo $_SESSION["motAffiche"];
             <article>
                 <?php if (isset($msg)) {
                     echo $msg;
-                } else if ($_SESSION["motAffiche"] == $_SESSION["mot"]) {
-                    echo "Vous avez découvert le mot bravo , Voulez-vous rejouer ?";
                 }
                 ?>
 
