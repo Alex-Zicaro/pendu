@@ -1,4 +1,7 @@
 <?php
+
+//projet bonus désoler pour le style :c
+
 session_start();
 
 require_once('include/fonction.php');
