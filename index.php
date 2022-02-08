@@ -80,6 +80,8 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
                 if ($_SESSION["mot"][$i] == $char) {
 
                     $found = true;
+
+                    if(isset($_SESSION["nbError"]))
                     $_SESSION["nbError"] = strlen($_SESSION["error"]);
 
                     if ($_SESSION["motAffiche"] != $_SESSION["mot"])
@@ -154,7 +156,7 @@ debug($_SESSION["nbError"]);
                 <div class="alphabet">
                     <?php
                     //Affichage du mot + alphabet
-                    if ($_SESSION["nbError"] <= 6 && $_SESSION['mot'] !== $_SESSION['motAffiche']) {
+                    if ($_SESSION["nbError"] <= 5 && $_SESSION['mot'] !== $_SESSION['motAffiche']) {
                         for ($i = 0; $i < strlen($alphabet); $i++) {
                             if (isset($_SESSION['history']) && strpos($_SESSION['history'], $alphabet[$i]) === false ) {
                                 echo " <a href='index.php?a=$alphabet[$i]'>$alphabet[$i]</a> ";
