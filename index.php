@@ -25,12 +25,14 @@ if (!isset($_SESSION["mot"])) {
 }
 
 debug($_SESSION["mot"]);
+
 $alphabet = "abcdefghijklmnopqrstuvwxyz";
-$_SESSION["error"] = 1;
+
 $_SESSION['motActuelle'] = "";
 $_SESSION["motAffiche"] = "";
 $_SESSION["tiret"] = "_";
-$_SESSION["bonChar"] = "";
+
+$_SESSION["nbError"] = 0;
 $i = 0;
 
 
@@ -49,7 +51,7 @@ for ($i = 0; $i < $nombreDeLettre; $i++)
 // }
 
 
-if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]) !== false && $_SESSION["error"] <= 9) {
+if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]) !== false ) {
     $char = "";
     $char = $_GET["a"];
 
@@ -62,8 +64,6 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
 
         $_SESSION["history"] .= $char;
     }
-
-    debug($_SESSION["history"]);
 
     $found = false; //variable pour compter lettre erronée 
 
@@ -80,6 +80,7 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
                 if ($_SESSION["mot"][$i] == $char) {
 
                     $found = true;
+                    $_SESSION["nbError"] = strlen($_SESSION["error"]);
 
                     if ($_SESSION["motAffiche"] != $_SESSION["mot"])
                         $msg = "Bravo , '$char' est dans le mot";
@@ -93,21 +94,31 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
     }
 
 
-    if (!$found && isset($_SESSION["error"])) {
+    if (!$found) {
 
-        var_dump(null);
+        if (!isset($_SESSION["error"]) && empty($_SESSION["error"])){
+            $_SESSION["error"] = $char;
+            $_SESSION["nbError"] = strlen($_SESSION["error"]);
+            $msg = "Désolé , '$char' n'est pas dans le mot";
+        }else{
 
-        $_SESSION['error']++;
+            $_SESSION['error'] .= $char;
+            $_SESSION["nbError"] = strlen($_SESSION["error"]);
+            
 
-        $msg = "Désolé , '$char' n'est pas dans le mot";
+            $msg = "Désolé , '$char' n'est pas dans le mot";
+        }
     }
 }
+if($_SESSION["nbError"] === 6)
+$msg = "Vous avez perdu. Recommencer";
+// }
 
 
-debug($_SESSION["error"]);
+
 
 echo $_SESSION["motAffiche"];
-
+debug($_SESSION["nbError"]);
 
 ?>
 
@@ -138,14 +149,14 @@ echo $_SESSION["motAffiche"];
                 }
                 ?>
 
-                <img src="media/75px-Hangman-<?= $_SESSION['error'] ?>.png" alt="hangman">
+                <img src="media/75px-Hangman-<?= $_SESSION["nbError"] ?>.png" alt="hangman">
 
                 <div class="alphabet">
                     <?php
                     //Affichage du mot + alphabet
-                    if ($_SESSION['error'] <= 9 && $_SESSION['mot'] !== $_SESSION['motAffiche']) {
+                    if ($_SESSION["nbError"] <= 6 && $_SESSION['mot'] !== $_SESSION['motAffiche']) {
                         for ($i = 0; $i < strlen($alphabet); $i++) {
-                            if (isset($_SESSION['history']) && strpos($_SESSION['history'], $alphabet[$i]) === false) {
+                            if (isset($_SESSION['history']) && strpos($_SESSION['history'], $alphabet[$i]) === false ) {
                                 echo " <a href='index.php?a=$alphabet[$i]'>$alphabet[$i]</a> ";
                             } else if (!isset($_SESSION["history"])) {
                                 echo " <a href='index.php?a=$alphabet[$i]'>$alphabet[$i]</a> ";
