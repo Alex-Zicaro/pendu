@@ -2,11 +2,22 @@
 
 require_once('include/fonction.php');
 
-if (!isset($arrayMot)){
-    $arrayMot = trimTab(file("mots.txt"));
+if (!isset($arrayMot)) {
+    $arrayMot = file("mots.txt");
     $nombreDeMot =  count($arrayMot,) - 1;
 }
 
+if (isset($_GET["leMot"])) {
+
+    $key = $_GET["leMot"];
+
+
+    
+    unset($arrayMot[$key]);
+    file_put_contents("mots.txt", $arrayMot);
+    header("location: admin.php");
+
+}
 
 if (isset($_POST["newMot"])) {
 
@@ -22,17 +33,6 @@ if (isset($_POST["newMot"])) {
         if ($newMot === $mot) {
             $msg = "Le mot n'est pas disponible";
         }
-        if (isset($_POST["delete"])) {
-
-            for($i = 0 ;$i <= $nombreDeMot; $i++){
-                unset($arrayMot[$i]);
-            }
-            $arrayMot = array_values($arrayMot);
-            $motDelArray = implode(PHP_EOL, $arrayMot);
-            $file = fopen("mots.txt", "w");
-            fwrite($file, $motDelArray);
-            header("location: index.php");
-        }
     }
     if (!$msg) {
 
@@ -40,6 +40,7 @@ if (isset($_POST["newMot"])) {
         fputs($fichierMot, $newMot . "\n");
         $msg = "J'ai taper votre mot à la main pour le rentrer dans le jeu";
     }
+    header("location: admin.php");
 }
 
 
@@ -62,19 +63,20 @@ if (isset($_POST["newMot"])) {
     </header>
     <main>
 
-        <section>
+        <section class="container">
             <article>
+                <h1>Entre un nouveau mot !</h1>
 
                 <form action="" method="POST">
                     <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux et les nombres sont interdit</i>)</label>
                     <input type="text" id="newMot" name="newMot">
-                    <input type="submit" name="enoyer" value="envoyer">
+                    <input class="btn btn-primary" type="submit" name="enoyer" value="envoyer">
 
-
-                    <a href="index.php">Retourner jouer !</a>
-
-                    <h2>Listes des mots</h2>
                 </form>
+                <a class="btn btn-primary" href="index.php">Retourner jouer !</a>
+
+                <h2>Listes des mots</h2>
+
                 <ul>
 
                     <?php
@@ -82,21 +84,22 @@ if (isset($_POST["newMot"])) {
                         echo $msg;
                     }
                     ?>
-                    <form action="" method="POST">
-                        <?php
-                        foreach ($arrayMot as $key => $mot) {
 
-                        ?>
+                    <?php
+                    foreach ($arrayMot as $key => $mot) {
 
-                            <li>Numéro <?= $key . " " . $mot ?></li>
-                            <input type="submit" name="delete" value="delete">
 
-                        <?php
-                        }
-                        ?>
+                    ?>
 
-                        <ul>
-                    </form>
+                        <li>Numéro : <?= $key . " " . $mot ?></li>
+
+                        <a class="btn btn-danger" href="./admin.php?leMot=<?= $key ?>">supprimer</a>
+                    <?php
+                    }
+                    ?>
+
+                    <ul>
+
             </article>
         </section>
     </main>
