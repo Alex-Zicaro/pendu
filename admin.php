@@ -1,11 +1,11 @@
-
 <?php
 
 require_once('include/fonction.php');
 
-if (!isset($arrayMot))
-$arrayMot = trimTab(file("mots.txt"));
-
+if (!isset($arrayMot)){
+    $arrayMot = trimTab(file("mots.txt"));
+    $nombreDeMot =  count($arrayMot,) - 1;
+}
 
 
 if (isset($_POST["newMot"])) {
@@ -18,19 +18,28 @@ if (isset($_POST["newMot"])) {
 
 
 
-    foreach ($arrayMot as $key => $mot){
-        if($newMot === $mot){
+    foreach ($arrayMot as $key => $mot) {
+        if ($newMot === $mot) {
             $msg = "Le mot n'est pas disponible";
         }
-    }
-        if(!$msg){
-            
-            $fichierMot = fopen('mots.txt', 'a+');
-            fputs($fichierMot, $newMot . "\n");
-            $msg = "J'ai taper votre mot à la main pour le rentrer dans le jeu";
-            
+        if (isset($_POST["delete"])) {
+
+            for($i = 0 ;$i <= $nombreDeMot; $i++){
+                unset($arrayMot[$i]);
+            }
+            $arrayMot = array_values($arrayMot);
+            $motDelArray = implode(PHP_EOL, $arrayMot);
+            $file = fopen("mots.txt", "w");
+            fwrite($file, $motDelArray);
+            header("location: index.php");
         }
-    
+    }
+    if (!$msg) {
+
+        $fichierMot = fopen('mots.txt', 'a+');
+        fputs($fichierMot, $newMot . "\n");
+        $msg = "J'ai taper votre mot à la main pour le rentrer dans le jeu";
+    }
 }
 
 
@@ -56,33 +65,38 @@ if (isset($_POST["newMot"])) {
         <section>
             <article>
 
-            <form action="" method="POST">
+                <form action="" method="POST">
                     <label for="newMot">Voulez vous ajouter un nouveau mot ? (<i>caractère spéciaux et les nombres sont interdit</i>)</label>
                     <input type="text" id="newMot" name="newMot">
                     <input type="submit" name="enoyer" value="envoyer">
+
+
+                    <a href="index.php">Retourner jouer !</a>
+
+                    <h2>Listes des mots</h2>
                 </form>
-
-                <a href="index.php">Retourner jouer !</a>
-
-                <h2>Listes des mots</h2>
                 <ul>
-                    
-                    <?php 
-                    if(isset($msg)){
+
+                    <?php
+                    if (isset($msg)) {
                         echo $msg;
                     }
-                    foreach($arrayMot as $mot){
+                    ?>
+                    <form action="" method="POST">
+                        <?php
+                        foreach ($arrayMot as $key => $mot) {
 
                         ?>
-                        
-                        <li><?= $mot ?></li>
-                        
+
+                            <li>Numéro <?= $key . " " . $mot ?></li>
+                            <input type="submit" name="delete" value="delete">
+
                         <?php
-                    }
-                    ?>
+                        }
+                        ?>
 
-                <ul>
-
+                        <ul>
+                    </form>
             </article>
         </section>
     </main>
