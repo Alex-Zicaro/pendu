@@ -62,7 +62,7 @@ for ($i = 0; $i < $nombreDeLettre; $i++)
 
 if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]) !== false ) {
     $char = "";
-    $char = $_GET["a"];
+    $char = strip_tags(htmlspecialchars($_GET["a"]));
 
 
 

@@ -9,7 +9,7 @@ if (!isset($arrayMot)) {
 
 if (isset($_GET["leMot"])) {
 
-    $key = $_GET["leMot"];
+    $key = strip_tags(htmlspecialchars($_GET["leMot"]));
 
 
     
@@ -23,7 +23,7 @@ if (isset($_POST["newMot"])) {
 
     $msg = false;
 
-    $Nouveaumot = $_POST["newMot"];
+    $Nouveaumot = strip_tags(htmlspecialchars($_POST["newMot"]));
 
     $newMot = deleteSpecialChar(strtolower($Nouveaumot));
 
