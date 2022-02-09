@@ -3,7 +3,7 @@
 //projet bonus désoler pour le style :c
 
 session_start();
-
+// appel du fichier fonctions
 require_once('include/fonction.php');
 
 
@@ -13,9 +13,10 @@ if (isset($_POST["reset"])) {
     header("location: index.php");
 } 
 
+// si la partie n'est pas finis
 if (!isset($_SESSION["mot"]) || $_SESSION["nbError"] === 7 ) {
     
-
+// pour gérer l'érreur si on a perdu et on refresh la page
     if(isset($_SESSION["nbError"]) && $_SESSION["nbError"] === 7){
     session_destroy();
     header("location: index.php");
@@ -29,43 +30,36 @@ if (!isset($_SESSION["mot"]) || $_SESSION["nbError"] === 7 ) {
 
     // on rend aléatoire le mot avec la function rand 
     $numrand = rand(0, $nombreDeMot);
-
+// on stock le mot dans une sessions pour pouvoir le garder en mémoire 
     $_SESSION["mot"] = $arrayMot[$numrand];
 }
 
 
-
+// je définis l'alphabet dans une variable
 $alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-$_SESSION['motActuelle'] = "";
+// le mot que j'affiche
 $_SESSION["motAffiche"] = "";
+// je stock les tiret dans cette variables
 $_SESSION["tiret"] = "_";
-
+// pour compter le nombre d'erreur
 $_SESSION["nbError"] = 0;
-$i = 0;
 
-
-
+// je compte le nombre de lettre
 $nombreDeLettre = strlen($_SESSION["mot"]);
+// pour incrementé les tirets avec le bon nombre
 for ($i = 0; $i < $nombreDeLettre; $i++)
     $_SESSION["motAffiche"][$i] = $_SESSION["tiret"];
+    // je l'affiche grâce a cette variable
 
 
-// echo $nombreDeLettre;
-
-
-// for($i = 1 ; $i <= 6 ; $i++)
-// {
-//     $_SESSION['lettresJouees'][] = 0;
-// }
-
-
+// si la lettre que l'utilisateur envoie a une valeur si la valeur est 1 lettre et que la lettre est dans l'alphabet
 if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]) !== false ) {
     $char = "";
     $char = strip_tags(htmlspecialchars($_GET["a"]));
 
 
-
+// je crée une variable history pour avoir tout simplement l'historique des lettres qu'on a envoyé
     if (!isset($_SESSION["history"]) && empty($_SESSION["history"])) {
 
         $_SESSION["history"]  = $char;
@@ -74,28 +68,26 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
         $_SESSION["history"] .= $char;
     }
 
-    $found = false; //variable pour compter lettre erronée 
+    $found = false; // si il reste faut y'a une erreur si il passe true c'est que l'utilisateur a trouvé une bonne lettre
 
+    // cette boucle est pour mettre à jour le mot affiche 
     for ($j = 0; $j < strlen($_SESSION["history"]); $j++) {
 
-
+// cette boucle est pour vérifier si chaque char est bon
         for ($i = 0; $i < strlen($_SESSION['mot']); $i++) {
 
-
+// on vérifie les correspondance et si on a pas finit la partie 
             if ($_SESSION['mot'][$i] == $_SESSION["history"][$j] && $_SESSION["mot"] !== $_SESSION["motAffiche"]) {
 
                 $_SESSION['motAffiche'][$i] = $_SESSION["history"][$j];
 
                 if ($_SESSION["mot"][$i] == $char) {
 
-                    $found = true;
-
-                    if(isset($_SESSION["error"]))
-                    $_SESSION["nbError"] = strlen($_SESSION["error"]);
-
+                    $found = true; // on passe found true pour dire que y'a pas d'erreur
+                    // on vérifie qu'on a pas finit la partie
                     if ($_SESSION["motAffiche"] != $_SESSION["mot"])
                         $msg = "Bravo , '$char' est dans le mot";
-
+                    // sinon il a gagné
                     else {
                         $msg = "Tu as gagné bravo";
                     }
@@ -104,15 +96,15 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
         }
     }
 
-
+// si il ne trouve pas de caractère
     if (!$found) {
-
+//si error n'a pas de valeur
         if (!isset($_SESSION["error"]) && empty($_SESSION["error"])){
             $_SESSION["error"] = $char;
             $_SESSION["nbError"] = strlen($_SESSION["error"]);
             $msg = "Désolé , '$char' n'est pas dans le mot";
             
-        }else{
+        }else{ // sinon
 
             $_SESSION['error'] .= $char;
             $_SESSION["nbError"] = strlen($_SESSION["error"]);
@@ -122,15 +114,9 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
         }
     }
 }
+// si la partie est finit
 if($_SESSION["nbError"] === 7)
 $msg = "Vous avez perdu!!! Rejouez ?";
-// }
-
-
-
-
-
-
 
 ?>
 
@@ -164,11 +150,12 @@ $msg = "Vous avez perdu!!! Rejouez ?";
                 }
                 ?>
         <h1><?= $_SESSION["motAffiche"] ?></h1>
+
                 <img src="media/75px-Hangman-<?= $_SESSION["nbError"] ?>.png" alt="hangman">
 
-                <div class="alphabet">
+                <div>
                     <?php
-                    //Affichage du mot + alphabet
+                    //Affichage de l'alphabet si la partie n'est pas finis 
                     if ($_SESSION["nbError"] <= 6 && $_SESSION['mot'] !== $_SESSION['motAffiche']) {
 
                         for ($i = 0; $i < strlen($alphabet); $i++) {
@@ -188,9 +175,10 @@ $msg = "Vous avez perdu!!! Rejouez ?";
 
                 <form action="" method="POST">
 
-                    <input class="btn btn-primary col-6" type="submit" name="reset" value="Nouvelle partie">
+                    <input class="btn btn-primary col-6 mt-3" type="submit" name="reset" value="Nouvelle partie">
                 </form>
-                <a class="btn btn-primary col-6" href="admin.php">Ajouter un mot</a>
+
+                <a class="btn btn-primary col-6 mt-3" href="admin.php">Ajouter un mot</a>
             </article>
         </section>
     </main>

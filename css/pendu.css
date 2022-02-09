@@ -1,13 +1,30 @@
+:root{
+
+}
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+
 body{
     background-color: rgb(18, 18, 112);
     color: rgb(255, 255, 255);
     font-size: 16px;
 }
+
 /* main{
     display: flex;
     justify-content: center;
     align-items: center;
 } */
+
+h1 , h2 , section article{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
 
 form{
     display: flex;
@@ -17,11 +34,12 @@ form{
 input , a {
 
 }
+
 article{
     display: flex;
     flex-direction: column;
-
 }
+
 
 img{
     width: 100px;
