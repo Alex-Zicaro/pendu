@@ -30,20 +30,21 @@ if (isset($_POST["newMot"])) {
     var_dump($arrayMot);
     foreach ($arrayMot as $mot) {
         
-        if ($newMot === $mot) {
+        
+        if ($newMot == $mot) {
             $msg = "Le mot n'est pas disponible";
         }
     }
     if (strlen($_POST["newMot"]) >= 20) {
         $msg = "Votre mot doit faire moins de 20 caractères";
-        
+
     } else if (!isset($msg)) {
 
         $fichierMot = fopen('mots.txt', 'a+');
         fputs($fichierMot, $newMot . "\n");
         $goodMsg = "J'ai taper votre mot à la main pour le rentrer dans le jeu";
     }
-    // header("Refresh:5; url=admin.php");
+    header("Refresh:5; url=admin.php");
 }
 
 
