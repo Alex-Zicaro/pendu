@@ -38,6 +38,7 @@ if (!isset($_SESSION["mot"]) || $_SESSION["nbError"] === 7 ) {
 // je définis l'alphabet dans une variable
 $alphabet = "abcdefghijklmnopqrstuvwxyz";
 
+
 // le mot que j'affiche
 $_SESSION["motAffiche"] = "";
 // je stock les tiret dans cette variables
@@ -85,10 +86,11 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
 
                     $found = true; // on passe found true pour dire que y'a pas d'erreur
                     // on vérifie qu'on a pas finit la partie
-                    if ($_SESSION["motAffiche"] != $_SESSION["mot"])
+                    if ($_SESSION["motAffiche"] != $_SESSION["mot"]){
                         $msg = "Bravo , '$char' est dans le mot";
+                        
                     // sinon il a gagné
-                    else {
+                }else {
                         $msg = "Tu as gagné bravo";
                     }
                 }
@@ -101,19 +103,21 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
 //si error n'a pas de valeur
         if (!isset($_SESSION["error"]) && empty($_SESSION["error"])){
             $_SESSION["error"] = $char;
-            $_SESSION["nbError"] = strlen($_SESSION["error"]);
+            
             $msg = "Désolé , '$char' n'est pas dans le mot";
             
         }else{ // sinon
 
             $_SESSION['error'] .= $char;
-            $_SESSION["nbError"] = strlen($_SESSION["error"]);
+            
             
 
             $msg = "Désolé , '$char' n'est pas dans le mot";
         }
     }
 }
+if(isset($_SESSION["error"]))
+$_SESSION["nbError"] = strlen($_SESSION["error"]);
 // si la partie est finit
 if($_SESSION["nbError"] === 7)
 $msg = "Vous avez perdu!!! Rejouez ?";
