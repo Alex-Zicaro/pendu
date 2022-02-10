@@ -118,6 +118,7 @@ if (isset($_GET["a"]) && strlen($_GET["a"]) == 1 && strpos($alphabet, $_GET["a"]
 }
 if(isset($_SESSION["error"]))
 $_SESSION["nbError"] = strlen($_SESSION["error"]);
+
 // si la partie est finit
 if($_SESSION["nbError"] === 7)
 $msg = "Vous avez perdu!!! Rejouez ?";

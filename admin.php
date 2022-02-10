@@ -9,13 +9,19 @@ if (!isset($arrayMot)) {
 
 if (isset($_GET["leMot"])) {
 
-    $key = strip_tags(htmlspecialchars($_GET["leMot"]));
+    if (!isset($arrayMot[1])) {
+        $msg = "Le jeu doit contenir 1 mot";
+        header("Refresh:5; url=admin.php");
+    } else {
+
+        $key = strip_tags(htmlspecialchars($_GET["leMot"]));
 
 
 
-    unset($arrayMot[$key]);
-    file_put_contents("mots.txt", $arrayMot);
-    header("location: admin.php");
+        unset($arrayMot[$key]);
+        file_put_contents("mots.txt", $arrayMot);
+        header("location: admin.php");
+    }
 }
 
 if (isset($_POST["newMot"])) {
@@ -27,17 +33,16 @@ if (isset($_POST["newMot"])) {
     $newMot = deleteSpecialChar(strtolower($Nouveaumot));
 
 
-    var_dump($arrayMot);
-    foreach ($arrayMot as $mot) {
-        
-        
-        if ($newMot == $mot) {
+    var_dump($newMot);
+    foreach ($arrayMot as $key => $mot) { // ça marche pas idk
+
+var_dump($mot);
+        if ($mot == $newMot) {
             $msg = "Le mot n'est pas disponible";
         }
     }
     if (strlen($_POST["newMot"]) >= 20) {
         $msg = "Votre mot doit faire moins de 20 caractères";
-
     } else if (!isset($msg)) {
 
         $fichierMot = fopen('mots.txt', 'a+');
