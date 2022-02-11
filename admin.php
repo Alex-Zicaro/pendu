@@ -16,8 +16,6 @@ if (isset($_GET["leMot"])) {
 
         $key = strip_tags(htmlspecialchars($_GET["leMot"]));
 
-
-
         unset($arrayMot[$key]);
         file_put_contents("mots.txt", $arrayMot);
         header("location: admin.php");
@@ -26,24 +24,23 @@ if (isset($_GET["leMot"])) {
 
 if (isset($_POST["newMot"])) {
 
-
-
     $Nouveaumot = strip_tags(htmlspecialchars($_POST["newMot"]));
 
     $newMot = deleteSpecialChar(strtolower($Nouveaumot));
 
 
-    var_dump($newMot);
-    foreach ($arrayMot as $key => $mot) { // ça marche pas idk
+    if (strlen($_POST["newMot"]) >= 20) {
+        $msg = "Votre mot doit faire moins de 20 caractères";
+    } 
+    foreach (trimTab($arrayMot) as $key => $mot) { // ça marche pas idk
 
-var_dump($mot);
         if ($mot == $newMot) {
+
             $msg = "Le mot n'est pas disponible";
         }
     }
-    if (strlen($_POST["newMot"]) >= 20) {
-        $msg = "Votre mot doit faire moins de 20 caractères";
-    } else if (!isset($msg)) {
+
+    if (!isset($msg)) {
 
         $fichierMot = fopen('mots.txt', 'a+');
         fputs($fichierMot, $newMot . "\n");
