@@ -145,7 +145,7 @@ $msg = "Vous avez perdu!!! Rejouez ?";
     <main>
 
         <section class="container">
-<h1>Bienvenue sûre le jeu du pendu</h1>
+<h1>Bienvenue sur le jeu du pendu</h1>
             <article>
                 <?php if (isset($msg)) {
                     echo $msg;
