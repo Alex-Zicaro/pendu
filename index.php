@@ -42,7 +42,7 @@ $alphabet = "abcdefghijklmnopqrstuvwxyz";
 // le mot que j'affiche
 $_SESSION["motAffiche"] = "";
 // je stock les tiret dans cette variables
-$_SESSION["tiret"] = "_";
+$_SESSION["tiret"] = "- ";
 // pour compter le nombre d'erreur
 $_SESSION["nbError"] = 0;
 
@@ -50,7 +50,7 @@ $_SESSION["nbError"] = 0;
 $nombreDeLettre = strlen($_SESSION["mot"]);
 // pour incrementé les tirets avec le bon nombre
 for ($i = 0; $i < $nombreDeLettre; $i++)
-    $_SESSION["motAffiche"][$i] = $_SESSION["tiret"];
+    @$_SESSION["motAffiche"][$i] = $_SESSION["tiret"];
     // je l'affiche grâce a cette variable
 
 
